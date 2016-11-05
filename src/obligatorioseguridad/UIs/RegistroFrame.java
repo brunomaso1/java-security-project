@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obligatorioseguridad;
+package obligatorioseguridad.UIs;
 
+import obligatorioseguridad.UIs.InicioFrame;
 import javax.swing.JOptionPane;
+import obligatorioseguridad.Retorno;
+import obligatorioseguridad.Usuario;
 
 /**
  *
@@ -43,9 +46,7 @@ public class RegistroFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Obligarorio Seguridad");
-        setMaximumSize(new java.awt.Dimension(393, 356));
         setMinimumSize(new java.awt.Dimension(393, 356));
-        setPreferredSize(new java.awt.Dimension(393, 356));
         setResizable(false);
 
         jLabel1.setText("Nombre");
@@ -92,7 +93,6 @@ public class RegistroFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(registrarme_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -107,7 +107,8 @@ public class RegistroFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(atras_btn))
+                    .addComponent(atras_btn)
+                    .addComponent(registrarme_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -143,16 +144,24 @@ public class RegistroFrame extends javax.swing.JFrame {
 
     private void registrarme_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarme_btnActionPerformed
         Usuario usuario = new Usuario();
-        int retorno = usuario.altaUsuario(nombre_et.getText(),
+        Retorno retorno = usuario.altaUsuario(nombre_et.getText(),
                 usuario_et.getText(),
                 password1_et.getText(),
                 password2_et.getText());
-        if (retorno == -1) {
-            JOptionPane.showMessageDialog(this, "Error de parámetro", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (retorno == -3) {
-            JOptionPane.showMessageDialog(this, "Error en SQL", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Correcto!!!", "Éxito", JOptionPane.PLAIN_MESSAGE);
+        if (retorno.getCodigo() == -1) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (retorno.getCodigo() == -2) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (retorno.getCodigo() == -3) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (retorno.getCodigo() == 0) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Éxito",
+                    JOptionPane.PLAIN_MESSAGE);
+            this.setVisible(false);
+            new InicioFrame().setVisible(true);
         }
     }//GEN-LAST:event_registrarme_btnActionPerformed
 

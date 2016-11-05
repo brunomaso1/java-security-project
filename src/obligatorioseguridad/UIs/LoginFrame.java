@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obligatorioseguridad;
+package obligatorioseguridad.UIs;
 
 /**
  *
@@ -36,7 +36,6 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Obligatorio Seguridad");
-        setMaximumSize(new java.awt.Dimension(282, 215));
         setMinimumSize(new java.awt.Dimension(282, 215));
         setResizable(false);
 
