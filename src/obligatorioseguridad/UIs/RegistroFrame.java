@@ -7,7 +7,7 @@ package obligatorioseguridad.UIs;
 
 import obligatorioseguridad.UIs.InicioFrame;
 import javax.swing.JOptionPane;
-import obligatorioseguridad.Retorno;
+import returns.Retorno;
 import obligatorioseguridad.Usuario;
 
 /**

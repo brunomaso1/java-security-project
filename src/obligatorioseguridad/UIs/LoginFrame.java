@@ -5,6 +5,11 @@
  */
 package obligatorioseguridad.UIs;
 
+import returns.RetornoUsuario;
+import javax.swing.JOptionPane;
+import obligatorioseguridad.ObligatorioSeguridad;
+import obligatorioseguridad.Usuario;
+
 /**
  *
  * @author juan
@@ -79,10 +84,10 @@ public class LoginFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(usuario_et)
-                            .addComponent(password_et, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)))
+                            .addComponent(password_et, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                            .addComponent(usuario_et)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(100, 100, 100)
                         .addComponent(login_btn))
@@ -117,7 +122,26 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_usuario_etActionPerformed
 
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
-        // TODO add your handling code here:
+        Usuario u = new Usuario();
+        RetornoUsuario retorno = u.logIn(usuario_et.getText(), password_et.getText());
+        if (retorno.getCodigo() == 0) {
+            ObligatorioSeguridad.idUsuarioLogueado = retorno.getUsuario().getIdUsuario();
+            
+            if (retorno.getUsuario().getIdRol() == 1) {  // Si es administrador
+                this.setVisible(false);
+                new OtorgarPermisosFrame().setVisible(true);
+            }
+        } else if (retorno.getCodigo() == -1) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (retorno.getCodigo() == -4) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (retorno.getCodigo() == -3) {
+            JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void atras_btnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_atras_btnMouseClicked

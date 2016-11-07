@@ -10,8 +10,9 @@ public class Conexion {
     public Conexion() throws SQLException {
         try {
             connection = DriverManager
-                            .getConnection("jdbc:postgresql://127.0.0.1:5432/SeguridadDB", "postgres",
-					"admin");
+                            .getConnection("jdbc:postgresql://127.0.0.1:5432/SeguridadDB", 
+                                    "postgres",
+				    "admin");
         } catch (SQLException e) {
             System.out.println("SQLException " + e);
         }

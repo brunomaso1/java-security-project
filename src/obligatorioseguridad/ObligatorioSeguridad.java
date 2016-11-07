@@ -1,12 +1,13 @@
 package obligatorioseguridad;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import obligatorioseguridad.UIs.InicioFrame;
 
 public class ObligatorioSeguridad {
+    public static int idUsuarioLogueado;
 
     public static void main(String[] args) {
-        
+        InicioFrame pantallaInicio = new InicioFrame();
+        pantallaInicio.setVisible(true);       
     }
     
 }
