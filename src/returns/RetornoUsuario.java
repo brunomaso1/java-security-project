@@ -5,7 +5,7 @@
  */
 package returns;
 
-import obligatorioseguridad.Usuario;
+import main.Usuario;
 
 /**
  *
