@@ -155,7 +155,7 @@
 			"file": "src/implementationCI/SecImp.java",
 			"settings":
 			{
-				"buffer_size": 1948,
+				"buffer_size": 2355,
 				"line_ending": "Windows"
 			}
 		}
@@ -595,7 +595,7 @@
 						{
 							"syntax": "Packages/SQL/SQL.sublime-syntax"
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -818,15 +818,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1948,
+						"buffer_size": 2355,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1518,
-								1518
+								1996,
+								1996
 							]
 						],
 						"settings":
@@ -836,7 +836,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 360.0,
+						"translation.y": 315.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
