@@ -1,5 +1,12 @@
+/*
+ * Universidad Catolica - Seguridad - Obligatorio.
+ */
 package main;
 
+/**
+ * Esta clase se encarga de interactuar con los permisos.
+ * @author Masoller, Artegoytia, Galleto, Olivera.
+ */
 public class Permiso {
     private int idPermiso;
     private String descripcion;

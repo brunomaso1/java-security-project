@@ -1,3 +1,6 @@
+/*
+ * Universidad Catolica - Seguridad - Obligatorio.
+ */
 package ui;
 
 import java.awt.event.WindowEvent;
@@ -10,6 +13,10 @@ import main.ObligatorioSeguridad;
 import main.Rol;
 import main.Usuario;
 
+/**
+ * Frame de Permisos.
+ * @author Masoller, Artegoytia, Galleto, Olivera.
+ */
 public class OtorgarPermisosFrame extends javax.swing.JFrame {
 
     String usuarioSeleccionado = "";

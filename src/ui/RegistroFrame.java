@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Universidad Catolica - Seguridad - Obligatorio.
  */
 package ui;
 
@@ -11,8 +9,8 @@ import returns.Retorno;
 import main.Usuario;
 
 /**
- *
- * @author juan
+ * Frame de registro.
+ * @author Masoller; Artegoytia; Galleto; Olivera.
  */
 public class RegistroFrame extends javax.swing.JFrame {
 

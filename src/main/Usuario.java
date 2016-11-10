@@ -1,3 +1,6 @@
+/*
+ * Universidad Catolica - Seguridad - Obligatorio.
+ */
 package main;
 
 import returns.Retorno;
@@ -11,6 +14,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * Esta clase se encarga de administrar los usuarios.
+ * @author Masoller, Artegoytia, Galleto, Olivera.
+ */
 public class Usuario {
     private int idUsuario;
     private String nombre;
