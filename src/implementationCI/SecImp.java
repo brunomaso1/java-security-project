@@ -3,76 +3,146 @@
  */
 package implementationCI;
 
-import java.io.FileInputStream; 
 import java.io.IOException;
-import java.io.InputStream; 
 import java.security.*;
 import java.security.cert.CertificateException;
-import java.util.Properties; 
-import java.util.
+import java.security.cert.X509Certificate;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Esta clase es la encargada de interactuar con la Cedula de Identidad.
  * @author Masoller, Artegoytia, Galleto, Olivera.
  */
-public class SecImp implements ISecImp {
+public class SecImp {
     private String configName;
     private Provider provider;
     private X509Certificate certificado;
 
-    public void SecImp(String configName) { this.configName = configName; }
+    public SecImp(String configName) { this.setConfigName(configName); }
 
-    public void SecImp() {
-        String configName = ".\\conf\\pkcs11.cfg";
-        Provider provider = new sun.security.pkcs11.SunPKCS11(configName);
-        Security.addProvider(provider);
+    public SecImp() {
+        this.setConfigName(".\\conf\\pkcs11.cfg");
+        this.setProvider(new sun.security.pkcs11.SunPKCS11(getConfigName()));
+        Security.addProvider(this.getProvider());
 
         // Log
         System.out.println("Se ha inicializado el provider correctamente.");
     }
 
     public void remProvider() { 
-        Security.removeProvider(provider.getName());
+        Security.removeProvider(getProvider().getName());
 
         // Log
         System.out.println("Se ha removido el provider correctamente.");
     }
 
-    public void conectCI() {
+    public void conCIsinPass() {
         String pin = "";
-        KeyStore cc = KeyStore.getInstance("PKCS11", provider);
-        KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pin.toCharArray());
-        cc.load(null,  pp.getPassword());
-        Enumeration aliases = cc.aliases();
-        while (aliases.hasMoreElements()) {
-            Object alias = aliases.nextElement();
-            try {
-                certificado = (X509Certificate) cc.getCertificate(alias.toString());
-
-                // Log
-                System.out.println("Se ha obtenido el certificado correctamente.");
-
-                System.out.println("I am: " + cert0.getSubjectDN().getName());
-                break;
-            } catch (Exception e) {
-                continue;
+        boolean certFlag = false;
+        try {            
+            KeyStore cc = KeyStore.getInstance("PKCS11", this.getProvider());
+            KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pin.toCharArray());
+            // cc.load(null,  pp.getPassword());
+            cc.load(null, null);
+            Enumeration aliases = cc.aliases();
+            while (aliases.hasMoreElements() && !(certFlag)) {
+                Object alias = aliases.nextElement();
+                try {
+                    this.setCertificado((X509Certificate) cc.getCertificate(alias.toString()));
+                    certFlag = true;
+                    
+                    // Log
+                    System.out.println("Se ha obtenido el certificado correctamente.");
+                } catch (Exception e) {
+                    continue;
+                }
             }
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion con el token. Compruebe que el token esta correctamente conectado.");
+        } catch (IOException | NoSuchAlgorithmException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion.");
+        } catch (CertificateException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion al certificado.");
         }
     }
 
-    public String getName() {
-        if certificado != null
-            
+    public String getName() { return (this.getCertificado()!=null) ? this.getCertificado().getSubjectDN().getName(): null; }  
+    
+    public void conCIconPass(String pasword) {
+        boolean certFlag = false;
+        try {            
+            KeyStore cc = KeyStore.getInstance("PKCS11", this.getProvider());
+            KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pasword.toCharArray());
+            cc.load(null,  pp.getPassword());
+            Enumeration aliases = cc.aliases();
+            while (aliases.hasMoreElements() && !(certFlag)) {
+                Object alias = aliases.nextElement();
+                try {
+                    this.setCertificado((X509Certificate) cc.getCertificate(alias.toString()));
+                    certFlag = true;
+                    
+                    // Log
+                    System.out.println("Se ha obtenido el certificado correctamente.");
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion con el token. Compruebe que el token esta correctamente conectado.");
+        } catch (IOException | NoSuchAlgorithmException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion. Compruebe el pin.");
+        } catch (CertificateException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ha fallado la conexion al certificado.");
+        }
+    }  
+
+    /**
+     * @return the configName
+     */
+    public String getConfigName() {
+        return configName;
     }
 
-    public static void main(String[] args) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        
-        //String pin = "Poner pin aca"; 
-        //KeyStore ks = KeyStore.getInstance("PKCS11");
-        //ks.load(null, pin.toCharArray());
-        //ks.load(null, null);
-                
-        
+    /**
+     * @param configName the configName to set
+     */
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
-    
+
+    /**
+     * @return the provider
+     */
+    public Provider getProvider() {
+        return provider;
+    }
+
+    /**
+     * @param provider the provider to set
+     */
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    /**
+     * @return the certificado
+     */
+    public X509Certificate getCertificado() {
+        return certificado;
+    }
+
+    /**
+     * @param certificado the certificado to set
+     */
+    public void setCertificado(X509Certificate certificado) {
+        this.certificado = certificado;
+    }
 }
+

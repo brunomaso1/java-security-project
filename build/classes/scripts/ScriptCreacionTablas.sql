@@ -1,3 +1,6 @@
+-- Script de creacion de tablas de la base de datos.
+-- @author Masoller, Artegoytia, Galleto, Olivera.
+
 CREATE DATABASE "SeguridadDB"
   WITH OWNER = postgres
        ENCODING = 'UTF8'
