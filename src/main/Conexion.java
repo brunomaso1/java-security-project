@@ -1,16 +1,9 @@
-/*
- * Universidad Catolica - Seguridad - Obligatorio.
- */
 package main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Esta clase es la encargada de interactuar con la base de datos.
- * @author Masoller, Artegoytia, Galleto, Olivera.
- */
 public class Conexion {
     private Connection connection;
     

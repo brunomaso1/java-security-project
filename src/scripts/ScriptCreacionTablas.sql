@@ -1,6 +1,3 @@
--- Script de creacion de tablas de la base de datos.
--- @author Masoller, Artegoytia, Galleto, Olivera.
-
 CREATE DATABASE "SeguridadDB"
   WITH OWNER = postgres
        ENCODING = 'UTF8'
@@ -8,6 +5,16 @@ CREATE DATABASE "SeguridadDB"
        LC_COLLATE = 'es_UY.UTF-8'
        LC_CTYPE = 'es_UY.UTF-8'
        CONNECTION LIMIT = -1;
+	   
+create table rol (
+	id_rol serial primary key,
+	descripcion varchar(20)
+);
+
+create table permiso (
+	id_permiso smallint primary key,
+	descripcion varchar(30) unique
+);
 
 ﻿create table usuario (
 	id_usuario serial primary key,
@@ -24,16 +31,6 @@ create table log (
 	fecha varchar(8),
 	hora varchar(6),
 	foreign key (id_usuario) references usuario (id_usuario)
-);
-
-create table permiso (
-	id_permiso smallint primary key,
-	descripcion varchar(30) unique
-);
-
-create table rol (
-	id_rol serial primary key,
-	descripcion varchar(20)
 );
 
 create table rol_permiso (
@@ -55,6 +52,7 @@ INSERT INTO rol (descripcion) VALUES ('Operario');
 INSERT INTO rol_permiso VALUES (1, 3);
 INSERT INTO rol_permiso VALUES (1, 4);
 
-insert into usuario (nombre, nombre_usuario, password, id_rol) values ('Juan Martin', 'jm', 'deed2a88e73dccaa30a9e6e296f62be238be4ade', 1)
+insert into usuario (nombre, nombre_usuario, password, id_rol) values ('Juan Martin', 'jm', '7a51d064a1a216a692f753fcdab276e4ff201a01d8b66f56d50d4d719fd0dc87', 1);
+insert into usuario (nombre, nombre_usuario, password, id_rol) values ('Guzmán Olivera', 'guzman', '7a51d064a1a216a692f753fcdab276e4ff201a01d8b66f56d50d4d719fd0dc87', 2)
 
 

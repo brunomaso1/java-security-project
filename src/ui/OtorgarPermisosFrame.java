@@ -1,6 +1,3 @@
-/*
- * Universidad Catolica - Seguridad - Obligatorio.
- */
 package ui;
 
 import java.awt.event.WindowEvent;
@@ -8,15 +5,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import returns.Retorno;
+
 import main.ObligatorioSeguridad;
 import main.Rol;
 import main.Usuario;
+import returns.Retorno;
 
-/**
- * Frame de Permisos.
- * @author Masoller, Artegoytia, Galleto, Olivera.
- */
 public class OtorgarPermisosFrame extends javax.swing.JFrame {
 
     String usuarioSeleccionado = "";
@@ -71,7 +65,9 @@ public class OtorgarPermisosFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Obligatorio Seguridad");
         setFocusTraversalPolicyProvider(true);
+        setMaximumSize(new java.awt.Dimension(430, 358));
         setMinimumSize(new java.awt.Dimension(430, 358));
+        setPreferredSize(new java.awt.Dimension(430, 358));
         setResizable(false);
 
         jLabel1.setText("Usuarios");

@@ -1,10 +1,5 @@
-/*
- * Universidad Catolica - Seguridad - Obligatorio.
- */
 package main;
 
-import returns.Retorno;
-import returns.RetornoUsuario;
 import java.util.List;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,11 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import returns.Retorno;
+import returns.RetornoUsuario;
 
-/**
- * Esta clase se encarga de administrar los usuarios.
- * @author Masoller, Artegoytia, Galleto, Olivera.
- */
 public class Usuario {
     private int idUsuario;
     private String nombre;
@@ -28,12 +21,20 @@ public class Usuario {
     public Retorno altaUsuario(String nombre,
             String usuario,
             String password,
-            String password2) {
+            String password2,
+            boolean conCI) {
         Retorno retorno = new Retorno();
-        if (password.length() != 16 || password2.length() != 16) {
-            retorno.setCodigo(-1);
-            retorno.setDescripcion("El largo de la constraseña debe ser de 16 caracteres");
-        } else if (!password.equals(password2)) {
+        if (!conCI) {
+            if (password.length() != 16 || password2.length() != 16) {
+                retorno.setCodigo(-1);
+                retorno.setDescripcion("El largo de la constraseña debe ser de 16 caracteres");
+            } else if (!Utiles.validarPass(password)) {
+                retorno.setCodigo(-1);
+                retorno.setDescripcion("La contraseña debe contener al menos un número y"
+                        + " caracter especial");
+            } 
+        } 
+        if (!password.equals(password2)) {
             retorno.setCodigo(-1);
             retorno.setDescripcion("Las constraseñas no coinciden");
         } else if (usuario.length() == 0) {
@@ -42,10 +43,6 @@ public class Usuario {
         } else if (nombre.length() == 0) {
             retorno.setCodigo(-1);
             retorno.setDescripcion("El nombre no puede ser vacío");
-        } else if (!Utiles.validarPass(password)) {
-            retorno.setCodigo(-1);
-            retorno.setDescripcion("La contraseña debe contener al menos un número y"
-                    + " caracter especial");
         } else {
             try {
                 String passwordHasheada = hashToPassword(password);
@@ -418,11 +415,8 @@ public class Usuario {
     
     public RetornoUsuario logIn (String usuario, String password) {
         RetornoUsuario retorno = new RetornoUsuario();
-        
-        if (password.length() != 16) {
-            retorno.setCodigo(-1);
-            retorno.setDescripcion("El largo de la constraseña debe ser de 16 caracteres");
-        } else if (usuario.length() == 0) {
+
+        if (usuario.length() == 0) {
             retorno.setCodigo(-1);
             retorno.setDescripcion("El usuario no puede ser vacío");
         } else {
@@ -484,7 +478,7 @@ public class Usuario {
     
     public String hashToPassword (String password) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] result = md.digest(password.getBytes());
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < result.length; i++) {

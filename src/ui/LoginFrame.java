@@ -1,16 +1,19 @@
 /*
- * Universidad Catolica - Seguridad - Obligatorio.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package ui;
 
-import returns.RetornoUsuario;
+
 import javax.swing.JOptionPane;
 import main.ObligatorioSeguridad;
 import main.Usuario;
+import returns.RetornoUsuario;
 
 /**
- * Frame de login.
- * @author Masoller, Artegoytia, Galleto, Olivera.
+ *
+ * @author juan
  */
 public class LoginFrame extends javax.swing.JFrame {
 
@@ -128,6 +131,9 @@ public class LoginFrame extends javax.swing.JFrame {
             if (retorno.getUsuario().getIdRol() == 1) {  // Si es administrador
                 this.setVisible(false);
                 new OtorgarPermisosFrame().setVisible(true);
+            } else if (retorno.getUsuario().getIdRol() == 2) {
+                this.setVisible(false);
+                new ArchivoFrame().setVisible(true);
             }
         } else if (retorno.getCodigo() == -1) {
             JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",

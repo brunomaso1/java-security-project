@@ -1,12 +1,5 @@
-/*
- * Universidad Catolica - Seguridad - Obligatorio.
- */
 package returns;
 
-/**
- * Esta clase se encagra de administrar los mensajes de retorno.
- * @author Masoller, Artegoytia, Galleto, Olivera.
- */
 public class Retorno {
     private int codigo;
     private String descripcion;

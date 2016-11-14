@@ -1,24 +1,37 @@
 /*
- * Universidad Catolica - Seguridad - Obligatorio.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package ui;
 
-import ui.InicioFrame;
+import implementationCI.SecImp;
 import javax.swing.JOptionPane;
-import returns.Retorno;
 import main.Usuario;
+import returns.Retorno;
 
 /**
- * Frame de registro.
- * @author Masoller; Artegoytia; Galleto; Olivera.
+ *
+ * @author juan
  */
 public class RegistroFrame extends javax.swing.JFrame {
-
+    private SecImp sec;
+    
     /**
      * Creates new form RegistroFrame
      */
     public RegistroFrame() {
         initComponents();
+        
+        sec = new SecImp();
+        boolean ciConectada = sec.estaEnchufada();
+
+        if (ciConectada) {
+            this.nombre_tv.setVisible(false);
+            this.nombre_et.setVisible(false);
+            this.password_tv.setText("Ingrese el PIN de su documento");
+            this.password2_tv.setText("Vuelva a ingresar el PIN");
+        } 
     }
 
     /**
@@ -30,10 +43,10 @@ public class RegistroFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        nombre_tv = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        password_tv = new javax.swing.JLabel();
+        password2_tv = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         registrarme_btn = new javax.swing.JButton();
         password1_et = new javax.swing.JPasswordField();
@@ -47,13 +60,13 @@ public class RegistroFrame extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(393, 356));
         setResizable(false);
 
-        jLabel1.setText("Nombre");
+        nombre_tv.setText("Nombre");
 
         jLabel2.setText("Usuario");
 
-        jLabel3.setText("Contraseña");
+        password_tv.setText("Contraseña");
 
-        jLabel4.setText("Repita su contraseña");
+        password2_tv.setText("Repita su contraseña");
 
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel5.setText("Registro de usuario");
@@ -90,24 +103,30 @@ public class RegistroFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                            .addComponent(password2_et, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(162, 162, 162)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(password1_et, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                                .addComponent(usuario_et)
-                                .addComponent(nombre_et))))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(atras_btn)
-                    .addComponent(registrarme_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(68, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(atras_btn)
+                            .addComponent(registrarme_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(password2_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(password2_et, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(password_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(password1_et, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(119, 119, 119)
+                                    .addComponent(usuario_et, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(28, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nombre_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(nombre_et, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,7 +137,7 @@ public class RegistroFrame extends javax.swing.JFrame {
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nombre_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nombre_et, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -126,11 +145,11 @@ public class RegistroFrame extends javax.swing.JFrame {
                     .addComponent(usuario_et, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(password_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password1_et, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(password2_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password2_et, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(registrarme_btn)
@@ -142,10 +161,35 @@ public class RegistroFrame extends javax.swing.JFrame {
 
     private void registrarme_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarme_btnActionPerformed
         Usuario usuario = new Usuario();
-        Retorno retorno = usuario.altaUsuario(nombre_et.getText(),
+        Retorno retorno = null;
+        
+        if (sec.estaEnchufada()) {
+            
+            sec.conCIconPass(password1_et.getText());
+
+            if (sec.verificarPin(password1_et.getText())) {
+                String nombre = sec.getName();
+
+                JOptionPane.showMessageDialog(this, "Su nombre es: " + nombre, "Correcto",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                retorno = usuario.altaUsuario(nombre,
+                    usuario_et.getText(),
+                    password1_et.getText(),
+                    password2_et.getText(),
+                    true);
+            } else {
+                JOptionPane.showMessageDialog(this, "PIN incorrecto", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }             
+            
+        } else {
+            retorno = usuario.altaUsuario(nombre_et.getText(),
                 usuario_et.getText(),
                 password1_et.getText(),
-                password2_et.getText());
+                password2_et.getText(),
+                false);
+        }
         if (retorno.getCodigo() == -1) {
             JOptionPane.showMessageDialog(this, retorno.getDescripcion(), "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -207,22 +251,35 @@ public class RegistroFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RegistroFrame().setVisible(true);
-                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel atras_btn;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField nombre_et;
+    private javax.swing.JLabel nombre_tv;
     private javax.swing.JPasswordField password1_et;
     private javax.swing.JPasswordField password2_et;
+    private javax.swing.JLabel password2_tv;
+    private javax.swing.JLabel password_tv;
     private javax.swing.JButton registrarme_btn;
     private javax.swing.JTextField usuario_et;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the sec
+     */
+    public SecImp getSec() {
+        return sec;
+    }
+
+    /**
+     * @param sec the sec to set
+     */
+    public void setSec(SecImp sec) {
+        this.sec = sec;
+    }
 }

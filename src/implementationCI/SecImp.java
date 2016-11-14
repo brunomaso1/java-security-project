@@ -70,7 +70,12 @@ public class SecImp {
         }
     }
 
-    public String getName() { return (this.getCertificado()!=null) ? this.getCertificado().getSubjectDN().getName(): null; }  
+    public String getName() { 
+        String nombre = this.getCertificado().getSubjectDN().getName();
+        String[] nombreCompleto = nombre.split(",");
+        nombre = nombreCompleto[0].substring(3, nombreCompleto[0].length());
+        return nombre;
+    }  
     
     public void conCIconPass(String pasword) {
         boolean certFlag = false;
@@ -101,8 +106,39 @@ public class SecImp {
             Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Ha fallado la conexion al certificado.");
         }
-    }  
-
+    }
+    
+    public boolean estaEnchufada() {    
+        KeyStore cc = null;
+        try {
+            cc = KeyStore.getInstance("PKCS11", this.getProvider());
+            return true;
+        } catch (KeyStoreException ex) {
+            return false;
+        }
+    }
+    
+    public boolean verificarPin(String pasword) {
+        try {
+            KeyStore cc = KeyStore.getInstance("PKCS11", this.getProvider());
+            KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pasword.toCharArray());
+            cc.load(null,  pp.getPassword());
+            return true;
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Se ha desenchufado la cedula");
+            return false;
+        } catch (IOException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Fallo el ingreso de pin.");
+            return false;
+        } catch (NoSuchAlgorithmException | CertificateException ex) {
+            Logger.getLogger(SecImp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Exploto el certificado.");
+            return false;
+        }
+    }
+    
     /**
      * @return the configName
      */

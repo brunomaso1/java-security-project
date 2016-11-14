@@ -1,18 +1,28 @@
 /*
- * Universidad Catolica - Seguridad - Obligatorio.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package main;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import ui.ArchivoFrame;
 
 /**
- * Esta clase tiene varias funcionalidades utilies.
- * @author Masoller, Artegoytia, Galleto, Olivera.
+ *
+ * @author juan
  */
 public class Utiles {
     public static String getHoraActual() {
@@ -59,5 +69,31 @@ public class Utiles {
             esValida = m.find();
         } 
         return esValida;
+    }
+    
+    public static String readFile(File file) throws IOException {
+        String everything = "";
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            everything = sb.toString();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            br.close();
+        }
+        
+        return everything; 
     }
 }

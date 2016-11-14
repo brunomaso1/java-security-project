@@ -1,13 +1,15 @@
 /*
- * Universidad Catolica - Seguridad - Obligatorio.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package returns;
 
 import main.Usuario;
 
 /**
- * Esta clase se encagra de administrar los mensajes de retorno.
- * @author Masoller, Artegoytia, Galleto, Olivera.
+ *
+ * @author juan
  */
 public class RetornoUsuario extends Retorno {
     private Usuario usuario;
