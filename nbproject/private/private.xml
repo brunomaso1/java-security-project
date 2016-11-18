@@ -13,11 +13,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/main/ObligatorioSeguridad.java</file>
-            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/ui/RegistroFrame.java</file>
             <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/implementationCI/SecImp.java</file>
-            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/main/Conexion.java</file>
-            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/main/Usuario.java</file>
-            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/ui/LoginFrame.java</file>
+            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/ui/ArchivoFrame.java</file>
+            <file>file:/C:/Users/bruno/Documents/GitHub/obligatorioSeguridad/src/ui/InicioFrame.java</file>
         </group>
     </open-files>
 </project-private>

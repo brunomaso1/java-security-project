@@ -5,6 +5,7 @@
  */
 package ui;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +15,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +48,8 @@ import main.Utiles;
 public class ArchivoFrame extends javax.swing.JFrame {
     private byte[] textoCifrado;
     private SecretKeySpec secretKeySpec;
+    private byte[] realSig;
+    private PublicKey pub;
 
     /**
      * Creates new form ArchivoFrame
@@ -63,12 +78,14 @@ public class ArchivoFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         textoDescifrado_ta = new javax.swing.JTextArea();
         logOut_btn = new javax.swing.JButton();
+        firmar_btn = new javax.swing.JButton();
+        comprobar_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Obligatorio Seguridad");
-        setMaximumSize(new java.awt.Dimension(540, 400));
-        setMinimumSize(new java.awt.Dimension(540, 400));
-        setPreferredSize(new java.awt.Dimension(540, 400));
+        setMaximumSize(new java.awt.Dimension(540, 452));
+        setMinimumSize(new java.awt.Dimension(540, 452));
+        setPreferredSize(new java.awt.Dimension(540, 452));
         setResizable(false);
 
         seleccionarArchivo_btn.setText("Seleccionar archivo");
@@ -116,6 +133,20 @@ public class ArchivoFrame extends javax.swing.JFrame {
             }
         });
 
+        firmar_btn.setText("Firmar");
+        firmar_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firmar_btnActionPerformed(evt);
+            }
+        });
+
+        comprobar_btn.setText("Comprobar firma");
+        comprobar_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comprobar_btnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,28 +154,30 @@ public class ArchivoFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(guardarClave_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cifrar_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(descifrar_btn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(clave_et, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(17, 17, 17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(seleccionarArchivo_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(38, 38, 38)
                                 .addComponent(ruta_tv, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(logOut_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(logOut_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(guardarClave_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cifrar_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(firmar_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(descifrar_btn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(clave_et, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(comprobar_btn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(17, 17, 17)))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -163,12 +196,16 @@ public class ArchivoFrame extends javax.swing.JFrame {
                     .addComponent(cifrar_btn)
                     .addComponent(descifrar_btn))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(firmar_btn)
+                    .addComponent(comprobar_btn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(62, 62, 62)
                 .addComponent(logOut_btn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -285,6 +322,90 @@ public class ArchivoFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_descifrar_btnActionPerformed
 
+    private void firmar_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firmar_btnActionPerformed
+        if (ObligatorioSeguridad.archivo == null) {
+            JOptionPane.showMessageDialog(this, "No se seleccionó ningún archivo para cifrar",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                
+                File fp = ObligatorioSeguridad.archivo;
+                KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA");
+                SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+                keyGen.initialize(1024, random);
+                KeyPair pair = keyGen.generateKeyPair();
+                PrivateKey priv = pair.getPrivate();
+                this.pub = pair.getPublic();
+                Signature dsa = Signature.getInstance("SHA1withDSA");
+                dsa.initSign(priv);
+                
+                FileInputStream fis = new FileInputStream(fp);
+                BufferedInputStream bufin = new BufferedInputStream(fis);
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = bufin.read(buffer)) >= 0) {
+                    dsa.update(buffer, 0, len);
+                };
+                bufin.close();
+       
+                this.realSig = dsa.sign();
+                
+                String texto = "Firma: " + realSig.toString();
+                texto += "\n";
+                byte[] key = pub.getEncoded();
+                texto += "Clave Publica: " + key.toString();
+                
+                this.textoCifrado_ta.setText(texto);             
+            } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | SignatureException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+    }//GEN-LAST:event_firmar_btnActionPerformed
+
+    private void comprobar_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comprobar_btnActionPerformed
+        if (ObligatorioSeguridad.archivo == null) {
+            JOptionPane.showMessageDialog(this, "No se seleccionó ningún archivo para cifrar",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        } else {              
+            try {
+                File fp = ObligatorioSeguridad.archivo;
+                PublicKey pubKey = this.pub;
+                
+                byte[] sigToVerify = this.realSig;
+                
+                Signature sig = Signature.getInstance("SHA1withDSA");
+                sig.initVerify(pubKey);
+               
+                FileInputStream fis = new FileInputStream(fp);
+                BufferedInputStream bufin = new BufferedInputStream(fis);
+                
+                byte[] buffer = new byte[1024];
+                int len;
+                while (bufin.available() != 0) {
+                    len = bufin.read(buffer);
+                    sig.update(buffer, 0, len);
+                };
+                bufin.close();
+                
+                boolean verifies = sig.verify(sigToVerify);
+                this.textoDescifrado_ta.setText(verifies==true?"Comprobado.":"El texto se ha modificado o la clave publica no es correcta.");
+            } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ArchivoFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+        } 
+    }//GEN-LAST:event_comprobar_btnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -323,7 +444,9 @@ public class ArchivoFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cifrar_btn;
     private javax.swing.JTextField clave_et;
+    private javax.swing.JButton comprobar_btn;
     private javax.swing.JButton descifrar_btn;
+    private javax.swing.JButton firmar_btn;
     private javax.swing.JButton guardarClave_btn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
